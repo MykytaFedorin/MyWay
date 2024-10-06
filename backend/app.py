@@ -14,7 +14,7 @@ logger.debug(".env has succesfully loaded")
 
 from db import handlers
 
-@app.get("/targets")
-async def get_all_targets() -> List[Target]:
-    return handlers.get_all_targets()
+@app.get("/user/{owner_login}/targets")
+async def get_all_targets(owner_login: str) -> List[Target]:
+    return handlers.get_all_targets(owner_login)
 

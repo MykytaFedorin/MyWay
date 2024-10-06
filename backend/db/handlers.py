@@ -28,10 +28,11 @@ def dictToTarget(dictObj: Dict) -> Target:
                   owner_id=int(dictObj.get("owner_id")))
 
 
-def get_all_targets() -> List[Target]:
+def get_all_targets(owner_login: str) -> List[Target]:
     try:        
         logger.debug("Executing query to fetch all targets")
-        records, summary, keys = driver.execute_query("MATCH (t:Target) RETURN t", database_="myway") 
+        query = f'MATCH (u:User {{login: "{owner_login}"}})-[:OWNS]->(t:Target) RETURN t'
+        records, summary, keys = driver.execute_query(query, database_="myway") 
         logger.info(f"Query successful, fetched {len(records)} records")
         logger.debug(f"Record in records are of type {type(records[0])}")
         return [dictToTarget(r.data().get("t")) for r in records]
