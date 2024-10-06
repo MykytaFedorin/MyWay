@@ -24,7 +24,8 @@ def dictToTarget(dictObj: Dict) -> Target:
     date_ = str(dictObj.get("deadline"))
     deadline = datetime.strptime(date_, "%Y-%m-%d").date()
     return Target(description=str(dictObj.get("description")),
-                  deadline=deadline)
+                  deadline=deadline,
+                  owner_id=int(dictObj.get("owner_id")))
 
 
 def get_all_targets() -> List[Target]:
