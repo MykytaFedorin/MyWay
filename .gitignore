@@ -1,2 +1,6 @@
 neo4jdata/
-
+.env
+neo4j_script.sh
+__pycache__/
+logs.*
+env/

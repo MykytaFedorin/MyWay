@@ -1,15 +1,20 @@
-from typing import Union
-
+import os
+import logging_
+from loguru import logger
+from typing import List
 from fastapi import FastAPI
+from db.data_models import Target
+from dotenv import load_dotenv
 
 app = FastAPI()
 
+load_dotenv()
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+logger.debug(".env has succesfully loaded")
 
+from db import handlers
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}   
+@app.get("/targets")
+async def get_all_targets() -> List[Target]:
+    return handlers.get_all_targets()
+
