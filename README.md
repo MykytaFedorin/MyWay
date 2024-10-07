@@ -1,4 +1,3 @@
-# myway
 # MyWay 
 
  _"Your digital way to real success"_
