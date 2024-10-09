@@ -1,8 +1,10 @@
 from loguru import logger
-from neo4j import GraphDatabase, Record
-from db.data_models import Target
+from neo4j import GraphDatabase
+from data_models import Goal
 from typing import List, Dict
-from datetime import date, datetime
+from datetime import datetime
+from myway_exceptions import FetchError, TransformError
+
 import os
 
 
@@ -19,24 +21,27 @@ except Exception as ex:
     raise ex
 
 
-def dictToTarget(dictObj: Dict) -> Target:
+def dictToTarget(dictObj: Dict) -> Goal:
     logger.debug(dictObj)
     date_ = str(dictObj.get("deadline"))
     deadline = datetime.strptime(date_, "%Y-%m-%d").date()
-    return Target(description=str(dictObj.get("description")),
+    return Goal(description=str(dictObj.get("description")),
                   deadline=deadline,
                   owner_id=int(dictObj.get("owner_id")))
 
 
-def get_all_targets(owner_login: str) -> List[Target]:
+def get_all_goals(owner_login: str) -> List[Goal]:
+    logger.debug("Executing query to fetch all goals")
+    query = f'MATCH (u:User {{login: "{owner_login}"}})-[:OWNS]->(g:Goal) RETURN g'
+
     try:        
-        logger.debug("Executing query to fetch all targets")
-        query = f'MATCH (u:User {{login: "{owner_login}"}})-[:OWNS]->(t:Target) RETURN t'
         records, summary, keys = driver.execute_query(query, database_="myway") 
         logger.info(f"Query successful, fetched {len(records)} records")
-        logger.debug(f"Record in records are of type {type(records[0])}")
-        return [dictToTarget(r.data().get("t")) for r in records]
     except Exception as ex:
-        logger.error(f"Error occurred while fetching targets: {ex}")
-        raise RuntimeError("Failed to fetch targets") from ex  # Создаем пользовательское исключение для API
+        logger.error(f"Error occurred while fetching goals: {ex}")
+        raise FetchError("Failed to fetch goals") from ex   
+    try:
+        return [dictToTarget(r.data().get("g")) for r in records]
+    except Exception as ex:
+        raise TransformError("Fail to transform dict to Goal")
 
