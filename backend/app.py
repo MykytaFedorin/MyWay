@@ -5,6 +5,11 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from data_models import Goal
 from dotenv import load_dotenv
+import os 
+
+logger.remove()
+log_path = os.path.join(os.getcwd(), "backend/logs.log")
+logger.add(log_path)
 
 app = FastAPI()
 

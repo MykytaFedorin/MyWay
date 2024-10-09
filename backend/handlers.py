@@ -7,7 +7,6 @@ from myway_exceptions import FetchError, TransformError
 
 import os
 
-
 URI = str(os.getenv("NEO4J_URL"))
 logger.debug(f"URL:{URI}")
 AUTH = (str(os.getenv("NEO4J_LOGIN")), str(os.getenv("NEO4J_PASSWORD")))
@@ -31,7 +30,7 @@ def dictToTarget(dictObj: Dict) -> Goal:
 
 
 def get_all_goals(owner_login: str) -> List[Goal]:
-    logger.debug("Executing query to fetch all goals")
+    logger.debug(f"Executing query to fetch all goals for user {owner_login}")
     query = f'MATCH (u:User {{login: "{owner_login}"}})-[:OWNS]->(g:Goal) RETURN g'
 
     try:        
