@@ -3,7 +3,7 @@ from neo4j import GraphDatabase
 from data_models import Goal
 from typing import List, Dict
 from datetime import datetime
-from myway_exceptions import FetchError, TransformError
+import myway_exceptions as my_ex
 
 import os
 
@@ -26,7 +26,7 @@ def dictToTarget(dictObj: Dict) -> Goal:
     deadline = datetime.strptime(date_, "%Y-%m-%d").date()
     return Goal(description=str(dictObj.get("description")),
                   deadline=deadline,
-                  owner_id=int(dictObj.get("owner_id")))
+                  owner_login=int(dictObj.get("owner_login")))
 
 
 def get_all_goals(owner_login: str) -> List[Goal]:
@@ -38,9 +38,42 @@ def get_all_goals(owner_login: str) -> List[Goal]:
         logger.info(f"Query successful, fetched {len(records)} records")
     except Exception as ex:
         logger.error(f"Error occurred while fetching goals: {ex}")
-        raise FetchError("Failed to fetch goals") from ex   
+        raise my_ex.FetchError("Failed to fetch goals") from ex   
     try:
         return [dictToTarget(r.data().get("g")) for r in records]
     except Exception as ex:
-        raise TransformError("Fail to transform dict to Goal")
+        raise my_ex.TransformError("Fail to transform dict to Goal")
+
+
+def create_goal(owner_login: str, goal: Goal) -> Goal:
+    logger.debug(f"Executing query to create Goal for user {owner_login}")
+    
+    query = '''
+    CREATE (:Goal{description: $description, deadline: date($deadline), owner_login: $owner_login})
+    '''
+    parameters = {
+        "description": goal.description,
+        "deadline": goal.deadline.isoformat(),  # Строка в формате YYYY-MM-DD
+        "owner_login": owner_login  # Используем owner_login из параметра функции
+    }
+
+    try:
+        with driver.session() as session:
+            result = session.run(query, parameters)
+            summary = result.consume()
+            counters = summary.counters
+            logger.debug(f"Nodes created: {counters.nodes_created}")
+            logger.debug(f"Relationships created: {counters.relationships_created}")
+            logger.debug(f"Properties set: {counters.properties_set}")
+            logger.debug(f"Successfully created Goal for user {owner_login}")
+        
+        # Можно вернуть обновленный объект Goal с owner_login
+        return Goal(
+            description=goal.description,
+            deadline=goal.deadline,
+            owner_login=goal.owner_login
+        )
+    except Exception as ex:
+        logger.error(f"Failed to create Goal for user {owner_login}: {ex}")
+        raise my_ex.CreateNodeError(f"Fail to create node of type Goal by user {owner_login}") from ex
 

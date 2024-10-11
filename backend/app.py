@@ -1,6 +1,6 @@
 from loguru import logger
 import json
-from myway_exceptions import FetchError
+import myway_exceptions as my_ex
 from typing import List
 from fastapi import FastAPI, HTTPException
 from data_models import Goal
@@ -23,9 +23,17 @@ import handlers
 async def get_all_goals(owner_login: str) -> List[Goal]:
     try:
         return handlers.get_all_goals(owner_login)
-    except FetchError as ex:
+    except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
                             detail=json.dumps({"message":str(ex)}))
 
+
+@app.post("/user/{owner_login}/goals")
+async def create_goal(owner_login: str, goal: Goal) -> Goal:
+    try:
+        return handlers.create_goal(owner_login, goal)
+    except my_ex.CreateNodeError as ex:
+        raise HTTPException(status_code=500,
+                            detail=json.dumps({"message": str(ex)}))
 
 

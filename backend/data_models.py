@@ -5,5 +5,5 @@ from datetime import date
 class Goal(BaseModel):
     description: str
     deadline: date
-    owner_id: int
+    owner_login: str
 
