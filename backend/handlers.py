@@ -50,10 +50,14 @@ def get_all_goals(owner_login: str) -> List[Goal]:
 def create_goal(owner_login: str, goal: Goal) -> Goal:
     logger.debug(f"Executing query to create Goal for user {owner_login}")
 
-    query = '''CREATE (:Goal {goal_id: $goal_id,
+    query = '''CREATE (g:Goal {goal_id: $goal_id,
                               description: $description,
                               deadline: date($deadline),
-                              owner_login: $owner_login})'''
+                              owner_login: $owner_login})
+                WITH g
+                MATCH (u:User {login: $owner_login})
+                CREATE (u)-[:HAS_GOAL]->(g)'''
+
     goal_id = str(goal.goal_id or uuid.uuid1())
     parameters = {
         "goal_id": goal_id,
