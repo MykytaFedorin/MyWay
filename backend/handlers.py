@@ -4,6 +4,7 @@ from data_models import Goal
 from typing import List, Dict
 from datetime import datetime
 import myway_exceptions as my_ex
+import uuid
 
 import os
 
@@ -12,7 +13,7 @@ logger.debug(f"URL:{URI}")
 AUTH = (str(os.getenv("NEO4J_LOGIN")), str(os.getenv("NEO4J_PASSWORD")))
 logger.debug(f"AUTH:{AUTH}")
 
-driver = GraphDatabase.driver(URI, auth=AUTH)
+driver = GraphDatabase.driver(URI, auth=AUTH, database="myway")
 try:
     driver.verify_connectivity()
     logger.debug("Succesfully established connection")
@@ -24,9 +25,10 @@ def dictToTarget(dictObj: Dict) -> Goal:
     logger.debug(dictObj)
     date_ = str(dictObj.get("deadline"))
     deadline = datetime.strptime(date_, "%Y-%m-%d").date()
-    return Goal(description=str(dictObj.get("description")),
-                  deadline=deadline,
-                  owner_login=int(dictObj.get("owner_login")))
+    return Goal(goal_id=uuid.UUID(dictObj.get("goal_id")),
+                description=str(dictObj.get("description")),
+                deadline=deadline,
+                owner_login=int(dictObj.get("owner_login")))
 
 
 def get_all_goals(owner_login: str) -> List[Goal]:
@@ -47,28 +49,37 @@ def get_all_goals(owner_login: str) -> List[Goal]:
 
 def create_goal(owner_login: str, goal: Goal) -> Goal:
     logger.debug(f"Executing query to create Goal for user {owner_login}")
-    
-    query = '''
-    CREATE (:Goal{description: $description, deadline: date($deadline), owner_login: $owner_login})
-    '''
+
+    query = '''CREATE (:Goal {goal_id: $goal_id,
+                              description: $description,
+                              deadline: date($deadline),
+                              owner_login: $owner_login})'''
+    goal_id = str(goal.goal_id or uuid.uuid1())
     parameters = {
+        "goal_id": goal_id,
         "description": goal.description,
         "deadline": goal.deadline.isoformat(),  # Строка в формате YYYY-MM-DD
-        "owner_login": owner_login  # Используем owner_login из параметра функции
+        "owner_login": owner_login
     }
+
+    logger.debug(f"Query: {query}")
+    logger.debug(f"Parameters: {parameters}")
 
     try:
         with driver.session() as session:
             result = session.run(query, parameters)
             summary = result.consume()
+            logger.debug(f"Query summary: {summary}")
             counters = summary.counters
             logger.debug(f"Nodes created: {counters.nodes_created}")
+            if counters.nodes_created == 0:
+                logger.warning("No nodes were created in the database.")
             logger.debug(f"Relationships created: {counters.relationships_created}")
             logger.debug(f"Properties set: {counters.properties_set}")
             logger.debug(f"Successfully created Goal for user {owner_login}")
-        
-        # Можно вернуть обновленный объект Goal с owner_login
+
         return Goal(
+            goal_id=uuid.UUID(goal_id),  # Преобразуем обратно в UUID
             description=goal.description,
             deadline=goal.deadline,
             owner_login=goal.owner_login
