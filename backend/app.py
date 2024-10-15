@@ -35,5 +35,8 @@ async def create_goal(owner_login: str, goal: Goal) -> Goal:
     except my_ex.CreateNodeError as ex:
         raise HTTPException(status_code=500,
                             detail=json.dumps({"message": str(ex)}))
+@app.get("/user/{user_login}/goal/{goal_id}")
+async def get_goal(user_login: str, goal_id: str):
+    return handlers.get_goal_by_id(user_login, goal_id)
 
 

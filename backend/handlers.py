@@ -28,7 +28,7 @@ def dictToTarget(dictObj: Dict) -> Goal:
     return Goal(goal_id=uuid.UUID(dictObj.get("goal_id")),
                 description=str(dictObj.get("description")),
                 deadline=deadline,
-                owner_login=int(dictObj.get("owner_login")))
+                owner_login=str(dictObj.get("owner_login")))
 
 
 def get_all_goals(owner_login: str) -> List[Goal]:
@@ -73,7 +73,6 @@ def create_goal(owner_login: str, goal: Goal) -> Goal:
         with driver.session() as session:
             result = session.run(query, parameters)
             summary = result.consume()
-            logger.debug(f"Query summary: {summary}")
             counters = summary.counters
             logger.debug(f"Nodes created: {counters.nodes_created}")
             if counters.nodes_created == 0:
@@ -92,3 +91,21 @@ def create_goal(owner_login: str, goal: Goal) -> Goal:
         logger.error(f"Failed to create Goal for user {owner_login}: {ex}")
         raise my_ex.CreateNodeError(f"Fail to create node of type Goal by user {owner_login}") from ex
 
+
+def get_goal_by_id(user_login: str, goal_id: str) -> Goal:
+    logger.debug(f"Start to retrieve goal with goal_id:'{goal_id}' for user:'{user_login}'")
+    query = f'MATCH (u:User {{login: "{user_login}"}})-[:HAS_GOAL]->(g:Goal {{goal_id: "{goal_id}"}}) RETURN g'
+    logger.debug(f"Query: {query}")
+    parameters = {
+                "goal_id": goal_id,
+                "user_login": user_login
+                }
+    logger.debug(f"Parameters '{parameters}'")
+    with driver.session() as session:
+        result = session.run(query, parameters)
+        records = result.fetch(1)
+        logger.debug(f"Result of quering: '{records}'")
+    req_record = records[0].data().get("g")
+    return dictToTarget(req_record)
+
+     
