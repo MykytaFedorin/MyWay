@@ -1,5 +1,6 @@
 from loguru import logger
 from neo4j import GraphDatabase
+from neo4j import exceptions as neo4j_ex
 from data_models import Goal
 from typing import List, Dict
 from datetime import datetime
@@ -102,10 +103,22 @@ def get_goal_by_id(user_login: str, goal_id: str) -> Goal:
                 }
     logger.debug(f"Parameters '{parameters}'")
     with driver.session() as session:
-        result = session.run(query, parameters)
-        records = result.fetch(1)
+        try:
+            result = session.run(query, parameters)
+        except neo4j_ex.SessionError as ex:
+            raise my_ex.FetchError("Session error") from ex
+        try:
+            records = result.fetch(1)
+            logger.debug("Succesfully fetched records for goal_id:'{goal_id}'")
+        except neo4j_ex.ResultConsumedError as ex:
+            raise my_ex.FetchError() from ex
         logger.debug(f"Result of quering: '{records}'")
-    req_record = records[0].data().get("g")
+    try:
+        req_record = records[0].data().get("g")
+    except KeyError as ex:
+        raise ex
+    except IndexError as ex:
+        raise ex
     return dictToTarget(req_record)
 
      
