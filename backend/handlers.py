@@ -23,13 +23,18 @@ except Exception as ex:
 
 
 def dictToTarget(dictObj: Dict) -> Goal:
-    logger.debug(dictObj)
-    date_ = str(dictObj.get("deadline"))
-    deadline = datetime.strptime(date_, "%Y-%m-%d").date()
-    return Goal(goal_id=uuid.UUID(dictObj.get("goal_id")),
-                description=str(dictObj.get("description")),
-                deadline=deadline,
-                owner_login=str(dictObj.get("owner_login")))
+    logger.debug("Start to transform dictObject to a Goal class")
+    logger.debug(f"Transformated dictObject: {dictObj}")
+    try:
+        date_ = str(dictObj.get("deadline"))
+        deadline = datetime.strptime(date_, "%Y-%m-%d").date()
+        goal = Goal(goal_id=uuid.UUID(dictObj.get("goal_id")),
+                    description=str(dictObj.get("description")),
+                    deadline=deadline,
+                    owner_login=str(dictObj.get("owner_login")))
+    except KeyError as ex:
+        raise my_ex.TransformError(str(ex))
+    return goal
 
 
 def get_all_goals(owner_login: str) -> List[Goal]:
@@ -105,6 +110,7 @@ def get_goal_by_id(user_login: str, goal_id: str) -> Goal:
     with driver.session() as session:
         try:
             result = session.run(query, parameters)
+            logger.debug("Succesfully started neo4j session")
         except neo4j_ex.SessionError as ex:
             raise my_ex.FetchError("Session error") from ex
         try:
@@ -116,9 +122,16 @@ def get_goal_by_id(user_login: str, goal_id: str) -> Goal:
     try:
         req_record = records[0].data().get("g")
     except KeyError as ex:
+        logger.debug(str(ex))
         raise ex
     except IndexError as ex:
+        logger.debug(str(ex))
         raise ex
-    return dictToTarget(req_record)
+    try:
+        req_goal = dictToTarget(req_record)
+    except my_ex.TransformError as ex:
+        raise ex
+    logger.debug("Succesfully retrieve goal with goal_id:'{goal_id}' for user '{}'")
+    return req_goal 
 
      

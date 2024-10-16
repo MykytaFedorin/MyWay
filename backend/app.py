@@ -44,6 +44,10 @@ async def get_goal(user_login: str, goal_id: str):
     except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
                             detail=json.dumps({"message":str(ex)}))
+    except my_ex.TransformError as ex:
+        raise HTTPException(status_code=500,
+                            detail=json.dumps({"message":
+                                               """Records was fetched but cannot transformed into the Goal class"""})) 
     except KeyError as ex:
         raise HTTPException(status_code=404,
                             detail=json.dumps({"message":str(ex)}))
