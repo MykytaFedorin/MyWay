@@ -50,6 +50,5 @@ async def get_goal(user_login: str, goal_id: str):
     except IndexError as ex:
         raise HTTPException(status_code=404,
                             detail=json.dumps({"message":
-                                               f"""Goal with goal_id: '{goal_id}' not found 
-                                                   for user '{user_login}'"""}))
+                            f"""Goal with goal_id: '{goal_id}' not found for user '{user_login}'"""}))
 
