@@ -45,11 +45,11 @@ async def get_goal(user_login: str, goal_id: str):
         raise HTTPException(status_code=500,
                             detail=json.dumps({"message":str(ex)}))
     except KeyError as ex:
-        raise HTTPException(status_code=500,
+        raise HTTPException(status_code=404,
                             detail=json.dumps({"message":str(ex)}))
     except IndexError as ex:
-        raise HTTPException(status_code=500,
-                            detail=json.dumps({"message":str(ex)}))
-
-
+        raise HTTPException(status_code=404,
+                            detail=json.dumps({"message":
+                                               f"""Goal with goal_id: '{goal_id}' not found 
+                                                   for user '{user_login}'"""}))
 
