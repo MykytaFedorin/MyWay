@@ -166,3 +166,37 @@ def edit_goal(user_id: str,
         raise my_ex.FetchError("ResultConsumedError") from ex
     logger.debug(f"Goal with goal_id:{goal_id} was succesfully edit")
     return goal
+
+
+def delete_goal(user_login: str,
+                goal_id: str):
+    logger.debug(f"Start to delete goal with goal_id:{goal_id} for user '{user_login}'")
+    query = '''MATCH (u:User {login: $user_login})-[:HAS_GOAL]->(g:Goal {goal_id: $goal_id}) 
+    DETACH DELETE g'''
+    parameters = {
+            "goal_id": goal_id,
+            "user_login": user_login
+            }
+    try:
+        with driver.session() as session:
+            records = session.run(query, parameters)
+            summary = records.consume()
+            counters = summary.counters
+            if counters.nodes_deleted == 0:
+                logger.debug(f"No such goal with goal_id: {goal_id}")
+                raise my_ex.NoSuchGoalError(f"No such goal with goal_id: {goal_id} in database")
+            else:
+                logger.debug(f"Relationships deleted count is {counters.relationships_deleted}")
+                logger.debug(f"Nodes deleted count is {counters.nodes_deleted}")
+                logger.debug(f"Goal with goal_id:{goal_id} was succesfully deleted")
+
+    except neo4j_ex.SessionError as ex:
+        logger.debug(str(ex))
+        raise my_ex.FetchError("Session error") from ex
+    except neo4j_ex.ResultConsumedError as ex:
+        logger.debug(str(ex))
+        raise my_ex.FetchError("ResultConsumedError") from ex
+    except neo4j_ex.ClientError as ex:
+        logger.debug(str(ex))
+        raise my_ex.QueryError("Error in user client Cypher query") from ex
+

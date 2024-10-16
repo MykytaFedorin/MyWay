@@ -25,7 +25,7 @@ async def get_all_goals(owner_login: str) -> List[Goal]:
         return handlers.get_all_goals(owner_login)
     except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
-                            detail=json.dumps({"message":str(ex)}))
+                            detail=str(ex))
 
 
 @app.post("/user/{owner_login}/goals")
@@ -34,7 +34,7 @@ async def create_goal(owner_login: str, goal: Goal) -> Goal:
         return handlers.create_goal(owner_login, goal)
     except my_ex.CreateNodeError as ex:
         raise HTTPException(status_code=500,
-                            detail=json.dumps({"message": str(ex)}))
+                            detail=str(ex))
 
 
 @app.get("/user/{user_login}/goal/{goal_id}")
@@ -43,14 +43,14 @@ async def get_goal(user_login: str, goal_id: str) -> Goal:
         return handlers.get_goal_by_id(user_login, goal_id)
     except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
-                            detail=json.dumps({"message":str(ex)}))
+                            detail=str(ex))
     except my_ex.TransformError as ex:
         raise HTTPException(status_code=500,
                             detail=json.dumps({"message":
                                                """Records was fetched but cannot transformed into the Goal class"""})) 
     except KeyError as ex:
         raise HTTPException(status_code=404,
-                            detail=json.dumps({"message":str(ex)}))
+                            detail=str(ex))
     except IndexError as ex:
         raise HTTPException(status_code=404,
                             detail=json.dumps({"message":
@@ -65,5 +65,21 @@ async def edit_goal(user_login: str,
         return handlers.edit_goal(user_login, goal_id, goal)
     except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
-                            detail=json.dumps({"message":str(ex)}))
+                            detail=str(ex))
 
+
+@app.delete("/user/{user_login}/goal/{goal_id}")
+async def delete_goal(user_login: str, 
+                      goal_id: str):
+    try:
+        handlers.delete_goal(user_login, goal_id)
+        return {"message", "Goal is succesfully deleted"}
+    except my_ex.NoSuchGoalError as ex: 
+        raise HTTPException(status_code=404,
+                            detail=str(ex))
+    except my_ex.FetchError as ex:
+        raise HTTPException(status_code=500,
+                            detail=str(ex))
+    except my_ex.QueryError as ex:
+        raise HTTPException(status_code=500,
+                            detail=str(ex))
