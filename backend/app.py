@@ -38,7 +38,7 @@ async def create_goal(owner_login: str, goal: Goal) -> Goal:
 
 
 @app.get("/user/{user_login}/goal/{goal_id}")
-async def get_goal(user_login: str, goal_id: str):
+async def get_goal(user_login: str, goal_id: str) -> Goal:
     try:
         return handlers.get_goal_by_id(user_login, goal_id)
     except my_ex.FetchError as ex:
@@ -55,4 +55,15 @@ async def get_goal(user_login: str, goal_id: str):
         raise HTTPException(status_code=404,
                             detail=json.dumps({"message":
                             f"""Goal with goal_id: '{goal_id}' not found for user '{user_login}'"""}))
+
+
+@app.put("/user/{user_login}/goal/{goal_id}")
+async def edit_goal(user_login: str,
+                    goal_id: str,
+                    goal: Goal) -> Goal:
+    try:
+        return handlers.edit_goal(user_login, goal_id, goal)
+    except my_ex.FetchError as ex:
+        raise HTTPException(status_code=500,
+                            detail=json.dumps({"message":str(ex)}))
 

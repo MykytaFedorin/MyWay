@@ -134,4 +134,35 @@ def get_goal_by_id(user_login: str, goal_id: str) -> Goal:
     logger.debug("Succesfully retrieve goal with goal_id:'{goal_id}' for user '{}'")
     return req_goal 
 
-     
+
+def edit_goal(user_id: str,
+              goal_id: str,
+              goal: Goal) -> Goal:
+    logger.debug(f"""Start to edit goal with goal_id:{goal_id}
+                     for user {user_id}""")
+    query = """
+            MATCH(g:Goal{goal_id: $goal_id})
+            SET g.goal_id = $goal_id,
+                g.deadline = $deadline,
+                g.owner_id = $owner_id,
+                g.description = $description
+            RETURN g 
+            """
+    parameters = {"goal_id": goal_id,
+                  "deadline": goal.deadline,
+                  "owner_id": user_id,
+                  "description": goal.description}
+    try:
+        with driver.session() as session:
+            records = session.run(query, parameters)
+            summary = records.consume()
+            counters = summary.counters
+            logger.debug(f"Properties set: {counters.properties_set}")
+
+    except neo4j_ex.SessionError as ex:
+        raise my_ex.FetchError("Session error") from ex
+
+    except neo4j_ex.ResultConsumedError as ex:
+        raise my_ex.FetchError("ResultConsumedError") from ex
+    logger.debug(f"Goal with goal_id:{goal_id} was succesfully edit")
+    return goal
