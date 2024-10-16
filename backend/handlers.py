@@ -39,7 +39,7 @@ def dictToTarget(dictObj: Dict) -> Goal:
 
 def get_all_goals(owner_login: str) -> List[Goal]:
     logger.debug(f"Executing query to fetch all goals for user {owner_login}")
-    query = f'MATCH (u:User {{login: "{owner_login}"}})-[:OWNS]->(g:Goal) RETURN g'
+    query = f'MATCH (u:User {{login: "{owner_login}"}})-[:HAS_GOAL]->(g:Goal) RETURN g'
 
     try:        
         records, summary, keys = driver.execute_query(query, database_="myway") 
