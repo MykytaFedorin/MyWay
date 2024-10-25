@@ -13,7 +13,7 @@ return (<nav>
                 <li id="settingsBtn"></li>
             </ul>
         </div>
-    </nav>)
+    </nav>);
 }
 
 export default Menu;

@@ -22,8 +22,8 @@ ul{
 }
 nav{
     display: flex;
-    width: 85%;
     height: 2em;
+    width: 100%;
     flex-direction: row;
     align-items: stretch;
     text: #223322;

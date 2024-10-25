@@ -1,0 +1,17 @@
+#mainArea{
+    display: flex;
+}
+#mainArea ul{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    gap: 0.5em;
+    margin: 0;
+    padding: 0;
+}
+#mainArea li{
+   cursor: pointer; 
+}
+#editArea{
+    flex-grow: 1;
+}

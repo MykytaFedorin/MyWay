@@ -1,4 +1,5 @@
 from loguru import logger
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import myway_exceptions as my_ex
 from typing import List
@@ -12,6 +13,16 @@ log_path = os.path.join(os.getcwd(), "backend/logs.log")
 logger.add(log_path)
 
 app = FastAPI()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Замените на список доверенных источников
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 load_dotenv()
 
