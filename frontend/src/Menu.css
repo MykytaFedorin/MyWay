@@ -1,0 +1,39 @@
+ul{
+    list-style: none;
+    display: flex;
+    gap: 2em;
+}
+#profileMenu{
+    display: none;
+}
+#menu{
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 2em;
+    margin: 0;
+    padding: 0;
+}
+#avatarImg{
+    height: 2em; 
+}
+#profile{
+    
+}
+nav{
+    display: flex;
+    width: 85%;
+    height: 2em;
+    flex-direction: row;
+    align-items: stretch;
+    text: #223322;
+}
+a{
+    color: inherit; /* Устанавливает цвет как у обычного текста */
+    text-decoration: none;
+}
+a:visited {
+    color: inherit; /* Устанавливает цвет как у обычного текста */
+    text-decoration: none; /* Убирает подчеркивание */
+}
+
