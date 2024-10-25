@@ -1,10 +1,14 @@
 import './ListItem.css';
-
-function ListItem({ onClick, goalDescription }) {
+import bucket from './bucket.png';
+function ListItem({ onClick, deleteGoal, goalDescription }) {
     return (
-        <li onClick={onClick} className="listItem">
-            {goalDescription}
-        </li>
+        <div className="listItem">
+            <li onClick={onClick} >
+                {goalDescription}
+            </li>
+            <img onClick={deleteGoal}
+                 src={bucket} alt="deleteBtn"></img>
+        </div>
     );
 }
 

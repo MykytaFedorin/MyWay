@@ -7,7 +7,6 @@ import MainArea from './MainArea.js';
 function App() {
     const [goals, setGoals] = useState([]);
     const url_ = 'http://localhost:8000/user/xfedorin/goals';
-    const getGoalUrl = 'http://localhost:8000/user/xfedorin/goals';
     
     useEffect(() => {
         getAllGoals();
@@ -27,7 +26,7 @@ function App() {
             <header id="App-header">
                 <Menu />
             </header>
-            <MainArea goals={goals}/>
+            <MainArea goals={goals} getAllGoals={getAllGoals}/>
         </div>
     );
 }
