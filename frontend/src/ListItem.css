@@ -3,6 +3,12 @@
     align-items: center;
     height: 2em;
     justify-content: space-between;
+    padding: 0.5em;
+    transition: background 0.2s;
+    border-radius: inherit;
+}
+.listItem:hover{
+    background: #DDDDDD;
 }
 .listItem img{
     height: 1em;

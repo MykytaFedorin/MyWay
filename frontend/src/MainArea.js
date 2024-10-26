@@ -2,10 +2,11 @@ import './MainArea.css';
 import { useState } from 'react';
 import ListItem from './ListItem.js';
 import plus from './plus.png';
-
+import GoalForm from './GoalForm.js';
 
 function MainArea({ goals, getAllGoals}) {
-    const [currentInfo, setCurrentInfo] = useState("");
+    const [currentInfo, setCurrentInfo] = useState(<div></div>);
+    const [currentEditArea, setCurrentEditArea] = useState();
     const getGoalUrl = 'http://localhost:8000/user/xfedorin/goal';
 
     function openDetails(goal_id) { 
@@ -34,14 +35,16 @@ function MainArea({ goals, getAllGoals}) {
         .catch(error => console.error('Error fetching goals:', error));
     }
     function createGoalForm(){
-        
+        setCurrentInfo(<GoalForm/>); 
     }
     return (
         <div id="mainArea">
           <div id="goalsListWrapper">
               <div id="goalsListHeader">
                     <span>Goals</span> 
-                    <img id="addGoalBtn" src={plus}></img>
+                    <img id="addGoalBtn" 
+                         onClick={createGoalForm}
+                         src={plus}></img>
               </div>
               <ul id="goalsList">
                 {goals.map((goal) => (
