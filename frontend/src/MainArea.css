@@ -16,9 +16,11 @@
    cursor: pointer; 
 }
 #editArea{
-    padding-right: 2em;
-    padding-left: 2em;
+    padding-left: 1em;
     flex-grow: 1;
+    border-left-width: 1px;
+    border-left-color: #CCCCCC;
+    border-left-style: solid;
 }
 #goalForm{
     display: flex;
@@ -45,6 +47,7 @@
     flex-direction: column;
     gap: 1em;
     border-radius: inherit;
+    padding-right: 1em;
 }
 #addGoalBtn{
     opacity: 50%;
@@ -58,7 +61,7 @@
     background: inherit;
 }
 #descriptionInput{
-    padding-top:2em;
+    padding-top: 2em;
     flex-grow: 1;
     border: none;
     outline: none;
