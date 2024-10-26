@@ -4,7 +4,7 @@
 #mainArea ul{
     display: flex;
     flex-direction: column;
-    width: 15%;
+    width: 100%;
     gap: 0.5em;
     margin: 0;
     padding: 0;
@@ -16,4 +16,19 @@
     padding-right: 2em;
     padding-left: 2em;
     flex-grow: 1;
+}
+#goalsListHeader{
+    display: flex;
+    height: 1em;
+    align-items: center;
+    justify-content: space-between;
+}
+#addGoalBtn{
+    height: inherit;
+}
+#goalsListWrapper{
+    display: flex;
+    width: 20%;
+    flex-direction: column;
+    gap: 1em;
 }

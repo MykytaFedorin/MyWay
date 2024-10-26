@@ -1,6 +1,8 @@
 import './MainArea.css';
 import { useState } from 'react';
 import ListItem from './ListItem.js';
+import plus from './plus.png';
+
 
 function MainArea({ goals, getAllGoals}) {
     const [currentInfo, setCurrentInfo] = useState("");
@@ -31,17 +33,25 @@ function MainArea({ goals, getAllGoals}) {
         .then(data=>console.log(data))
         .catch(error => console.error('Error fetching goals:', error));
     }
-
+    function createGoalForm(){
+        
+    }
     return (
         <div id="mainArea">
-          <ul id="goalsList">
-            {goals.map((goal) => (
-                <ListItem key={goal.goal_id} 
-                          onClick={() => openDetails(goal.goal_id)}
-                          deleteGoal={() => deleteGoal(goal.goal_id)}
-                          goalDescription={goal.description} />
-            ))}
-          </ul>
+          <div id="goalsListWrapper">
+              <div id="goalsListHeader">
+                    <span>Goals</span> 
+                    <img id="addGoalBtn" src={plus}></img>
+              </div>
+              <ul id="goalsList">
+                {goals.map((goal) => (
+                    <ListItem key={goal.goal_id} 
+                              onClick={() => openDetails(goal.goal_id)}
+                              deleteGoal={() => deleteGoal(goal.goal_id)}
+                              goalDescription={goal.description} />
+                ))}
+              </ul>
+          </div>
           <div id="editArea">{currentInfo}</div>
         </div>
     );
