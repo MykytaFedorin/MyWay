@@ -35,7 +35,7 @@ function MainArea({ goals, getAllGoals}) {
         .catch(error => console.error('Error fetching goals:', error));
     }
     function createGoalForm(){
-        setCurrentInfo(<GoalForm/>); 
+        setCurrentInfo(<GoalForm getAllGoals={getAllGoals}/>); 
     }
     return (
         <div id="mainArea">

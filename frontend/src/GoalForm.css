@@ -1,0 +1,17 @@
+#createBtnWrapper{
+    display: flex;
+    height: 2em;
+    justify-content: flex-end;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+#createBtn{
+    margin-right: 2em; 
+    width: 8em;
+    background: inherit;
+    border-radius: 0.3em;
+    border: 2px solid #CCCCCC;
+}
+#createBtn:hover{
+    background: #CCCCCC;
+}
