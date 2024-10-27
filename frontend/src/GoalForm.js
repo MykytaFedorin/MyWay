@@ -39,6 +39,30 @@ function GoalForm({ getAllGoals, data, isNew}) {
         })
         .catch(error => console.error('Error creating goal:', error));
     }
+    function editGoal(event) {
+        event.preventDefault(); // Предотвращаем перезагрузку страницы
+        console.log(data.goal_id);
+        const url = "http://localhost:8000/user/xfedorin/goal" + "/" + data.goal_id;
+        fetch(url, {
+            method: 'PUT',
+            body: JSON.stringify({
+                description: currentDescription,
+                deadline: currentDate,
+                owner_login: "xfedorin"
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => {
+                response.json();
+                getAllGoals(); // Вызываем функцию обновления целей
+                setCurrentDate("");
+                setCurrentDescription("");
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error('Error creating goal:', error));
+    }
     return (
         <form id="goalForm">
             <input
@@ -56,7 +80,7 @@ function GoalForm({ getAllGoals, data, isNew}) {
             <div id="createBtnWrapper">
                 <button
                     id="createBtn"
-                    onClick={createGoal}
+                    onClick={isNew ? createGoal : editGoal}
                 >
                 {btnName}
                 </button>
