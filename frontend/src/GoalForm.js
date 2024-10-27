@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import './GoalForm.css';
 
-function GoalForm({ getAllGoals }) {
-    const [currentDate, setCurrentDate] = useState(() => {
-        const today = new Date();
-        return today.toISOString().split('T')[0] || ''; 
-    });
-    const [currentDescription, setCurrentDescription] = useState("");
+function GoalForm({ getAllGoals , defaultDate, defaultDescription}) {
+    const [currentDate, setCurrentDate] = useState(defaultDate);
+    const [currentDescription, setCurrentDescription] = useState(defaultDescription);
 
     function changeDate(event) {
         setCurrentDate(event.target.value);
