@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import './GoalForm.css';
 
-function GoalForm({ getAllGoals , defaultDate, defaultDescription}) {
+function GoalForm({ getAllGoals , defaultDate, defaultDescription, isNew}) {
     const [currentDate, setCurrentDate] = useState(defaultDate);
     const [currentDescription, setCurrentDescription] = useState(defaultDescription);
+
+    const btnName = isNew ? "Create" : "Save";
 
     function changeDate(event) {
         setCurrentDate(event.target.value);
@@ -37,7 +39,6 @@ function GoalForm({ getAllGoals , defaultDate, defaultDescription}) {
         })
         .catch(error => console.error('Error creating goal:', error));
     }
-
     return (
         <form id="goalForm">
             <input
@@ -57,7 +58,7 @@ function GoalForm({ getAllGoals , defaultDate, defaultDescription}) {
                     id="createBtn"
                     onClick={createGoal}
                 >
-                    Create
+        {btnName}
                 </button>
             </div>
         </form>

@@ -7,15 +7,29 @@ import GoalForm from './GoalForm.js';
 function MainArea({ goals, getAllGoals}) {
     const [currentInfo, setCurrentInfo] = useState(<div></div>);
     const [currentEditArea, setCurrentEditArea] = useState();
+    const [formKey, setFormKey] = useState(0);
     const getGoalUrl = 'http://localhost:8000/user/xfedorin/goal';
 
     function openDetails(goal_id) { 
         fetch(`${getGoalUrl}/${goal_id}`, {
             method: 'GET',
         })
-        .then(response => response.json())
-        .then(data => setCurrentInfo(JSON.stringify(data["description"])))
-        .catch(error => console.error('Error fetching goals:', error));
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch goal details');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            setFormKey(prevKey => prevKey + 1);
+            setCurrentInfo(
+            <GoalForm key={formKey}
+                      getAllGoals={getAllGoals}
+                      defaultDate={data.deadline}
+                      defaultDescription={data.description} 
+                      isNew={false}/>);
+        })
+        .catch((error) => console.error('Error fetching goals:', error));
     }
     function deleteGoal(goal_id) { 
         setCurrentInfo("");
@@ -35,9 +49,12 @@ function MainArea({ goals, getAllGoals}) {
         .catch(error => console.error('Error fetching goals:', error));
     }
     function createGoalForm(){
-        setCurrentInfo(<GoalForm getAllGoals={getAllGoals}
+        setFormKey(prevKey => prevKey + 1);
+        setCurrentInfo(<GoalForm key={formKey} 
+                                 getAllGoals={getAllGoals}
                                  defaultDate=""
-                                 defaultDescription=""/>); 
+                                 defaultDescription=""
+                                 isNew={true}/>); 
     }
     return (
         <div id="mainArea">
