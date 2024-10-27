@@ -2,6 +2,7 @@
     display: flex;
     border-radius: 0.2em;
     flex-grow: 1;
+    padding-bottom: 2em;
 }
 #goalsList{
     display: flex;
