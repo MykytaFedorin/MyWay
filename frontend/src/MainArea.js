@@ -25,8 +25,7 @@ function MainArea({ goals, getAllGoals}) {
             setCurrentInfo(
             <GoalForm key={formKey}
                       getAllGoals={getAllGoals}
-                      defaultDate={data.deadline}
-                      defaultDescription={data.description} 
+                      data={data}
                       isNew={false}/>);
         })
         .catch((error) => console.error('Error fetching goals:', error));
@@ -52,8 +51,8 @@ function MainArea({ goals, getAllGoals}) {
         setFormKey(prevKey => prevKey + 1);
         setCurrentInfo(<GoalForm key={formKey} 
                                  getAllGoals={getAllGoals}
-                                 defaultDate=""
-                                 defaultDescription=""
+                                 data={{deadline: "",
+                                        description: ""}}
                                  isNew={true}/>); 
     }
     return (

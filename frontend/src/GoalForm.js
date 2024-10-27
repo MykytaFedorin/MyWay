@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './GoalForm.css';
 
-function GoalForm({ getAllGoals , defaultDate, defaultDescription, isNew}) {
-    const [currentDate, setCurrentDate] = useState(defaultDate);
-    const [currentDescription, setCurrentDescription] = useState(defaultDescription);
+function GoalForm({ getAllGoals, data, isNew}) {
+    const [currentDate, setCurrentDate] = useState(data.deadline);
+    const [currentDescription, setCurrentDescription] = useState(data.description);
 
     const btnName = isNew ? "Create" : "Save";
 
@@ -58,7 +58,7 @@ function GoalForm({ getAllGoals , defaultDate, defaultDescription, isNew}) {
                     id="createBtn"
                     onClick={createGoal}
                 >
-        {btnName}
+                {btnName}
                 </button>
             </div>
         </form>
