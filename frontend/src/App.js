@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Menu from './Menu.js';
 import MainArea from './MainArea.js';
-
+import LoginScreen from "./LoginScreen.js";
 function App() {
     const [user, setUser] = useState("guest");
     const [token, setToken] = useState(localStorage.getItem('accessToken') || "");
@@ -75,15 +75,19 @@ function App() {
             console.error('Error fetching goals:', error);
         }
     }
-
-    return (
-        <div id="App-body">
-            <header id="App-header">
-                <Menu user={user}/>
-            </header>
-            <MainArea goals={goals} getAllGoals={getAllGoals}/>
-        </div>
-    );
+    if(user !== "guest"){
+        return (
+            <div id="App-body">
+                <header id="App-header">
+                    <Menu user={user}/>
+                </header>
+                <MainArea goals={goals} getAllGoals={getAllGoals}/>
+            </div>
+        );
+    }
+    else{
+        return(<LoginScreen user={user}/>);
+    }
 }
 
 export default App;
