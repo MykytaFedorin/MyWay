@@ -19,7 +19,7 @@ return (<nav>
         <li><a href="#philosofy">Philosofy</a></li>
         <li><a href="#goals">Goals</a></li>
       </ul>
-        <a id="authLink" href={fullQuery} style={authBtnStyle}>Google</a>
+        <div id="loginBtn"><a id="authLink" href={fullQuery} style={authBtnStyle}>Log in</a></div>
         <div id="logoutBtn" onClick={logout} style={logoutBtnStyle}>Log out</div>
         <span id="userId">{user}</span>
        <div id="profile">
