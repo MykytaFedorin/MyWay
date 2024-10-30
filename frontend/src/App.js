@@ -5,14 +5,18 @@ import MainArea from './MainArea.js';
 
 function App() {
     const [user, setUser] = useState("guest");
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(localStorage.getItem('accessToken') || "");
     const [goals, setGoals] = useState([]);
     const url_ = 'http://localhost:8000/user/xfedorin/goals';
 
     useEffect(() => {
-        identifyUser(); // Вызываем только один раз при монтировании компонента
+        if (token) {
+            fetchUserInfo(token); // Загружаем информацию о пользователе, если токен есть
+        } else {
+            identifyUser(); // Попробуем идентифицировать пользователя через URL
+        }
         getAllGoals();
-    }, []); 
+    }, [token]); 
 
     async function identifyUser() {
         const hash = window.location.hash;
@@ -22,6 +26,7 @@ function App() {
         if (accessToken) {
             console.log("Access Token:", accessToken);
             setToken(accessToken);
+            localStorage.setItem('accessToken', accessToken);
             setUser("loggedin");
             window.location.hash = '';
 
@@ -37,7 +42,7 @@ function App() {
             const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`, // Используем переданный токен
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -47,9 +52,9 @@ function App() {
             }
 
             const userInfo = await response.json();
-            const userName = userInfo.name; 
-            setUser(userName); // Установите имя пользователя
-            console.log('User Name:', userName); // Выводим имя пользователя для отладки
+            const userEmail = userInfo.email; 
+            setUser(userEmail);
+            localStorage.setItem("email", userEmail);
         } catch (error) {
             console.error('Error fetching user info:', error);
         }

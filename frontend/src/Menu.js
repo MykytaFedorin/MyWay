@@ -10,13 +10,14 @@ function Menu({user}){
                     "&redirect_uri=" + redirectUri+
                     "&response_type=token"+
                     "&scope=openid%20email%20profile";
+    let authBtnStyle = {display: user ? "none" : "flex"}
 return (<nav>
       <ul id="menu">
         <li><a href="#philosofy">Philosofy</a></li>
         <li><a href="#goals">Goals</a></li>
       </ul>
-        <a href={fullQuery}>Google</a>
-        <span>{user}</span>
+        <a id="authLink" href={fullQuery} style={authBtnStyle}>Google</a>
+        <span id="userId">{user}</span>
        <div id="profile">
             <img id="avatarImg" src={avatar} alt="avatar"/>
             <ul id="profileMenu">
