@@ -10,6 +10,7 @@ function App() {
     const url_ = 'http://localhost:8000/user/xfedorin/goals';
 
     useEffect(() => {
+        console.log("Токен при загрузке:", token);
         if (token) {
             fetchUserInfo(token); // Загружаем информацию о пользователе, если токен есть
         } else {
@@ -57,11 +58,13 @@ function App() {
             localStorage.setItem("email", userEmail);
         } catch (error) {
             console.error('Error fetching user info:', error);
+            localStorage.removeItem("accessToken");
+
         }
     }
     async function logoutUser(){
         setUser("guest"); 
-        localStorage.setItem("token", "");
+        localStorage.removeItem("accessToken");
     }
     async function getAllGoals() {
         try {
