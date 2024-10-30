@@ -59,7 +59,10 @@ function App() {
             console.error('Error fetching user info:', error);
         }
     }
-
+    async function logoutUser(){
+        setUser("guest"); 
+        localStorage.setItem("token", "");
+    }
     async function getAllGoals() {
         try {
             const response = await fetch(url_, {
@@ -79,7 +82,7 @@ function App() {
         return (
             <div id="App-body">
                 <header id="App-header">
-                    <Menu user={user}/>
+                    <Menu user={user} logout={logoutUser}/>
                 </header>
                 <MainArea goals={goals} getAllGoals={getAllGoals}/>
             </div>

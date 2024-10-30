@@ -36,11 +36,14 @@ a:visited {
     color: inherit; /* Устанавливает цвет как у обычного текста */
     text-decoration: none; /* Убирает подчеркивание */
 }
-#authLink, #userId{
+#authLink, #userId, #logoutBtn{
     margin-right: 2em; 
 }
-#userId{
+#userId, #logoutBtn{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#logoutBtn{
+    cursor: pointer;
 }
