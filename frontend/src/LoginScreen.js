@@ -11,19 +11,21 @@ function LoginScreen({user}){
                     "&response_type=token"+
                     "&scope=openid%20email%20profile";
     return (
-        <div id="App-body" className={"backgroundEnabled"}>
-            <header id="App-header">
-                <Menu user={user}/>
-            </header>
-            <div id="loginMessage">
-                <div id="loginMessageWrapper">
-                    <h1>
-                        <a id="authLink" href={fullQuery}>log in</a>
-                    </h1>
-                    <h1>
-                        to start changing your life
-                    </h1>
-                </div> 
+        <div id="App-body-wrapper" className={"backgroundEnabled"}>
+            <div id="App-body">
+                <header id="App-header">
+                    <Menu user={user}/>
+                </header>
+                <div id="loginMessage">
+                    <div id="loginMessageWrapper">
+                        <h1>
+                            <a id="authLink" href={fullQuery}>log in</a>
+                        </h1>
+                        <h1>
+                            to start changing your life
+                        </h1>
+                    </div> 
+                </div>
             </div>
         </div>
     );
