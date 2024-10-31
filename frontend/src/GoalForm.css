@@ -10,8 +10,11 @@
     width: 8em;
     background: inherit;
     border-radius: 0.3em;
-    border: 2px solid #CCCCCC;
+    border: 2px solid #FF7A2B;
 }
 #createBtn:hover{
-    background: #CCCCCC;
+    background: #FF7A2B;
+}
+textarea, input{
+    font-family: "Nunito", sans-serif;
 }

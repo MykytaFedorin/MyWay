@@ -20,7 +20,7 @@
     padding-left: 1em;
     flex-grow: 1;
     border-left-width: 1px;
-    border-left-color: #CCCCCC;
+    border-left-color: #FF7A2B;
     border-left-style: solid;
 }
 #goalForm{
@@ -35,7 +35,7 @@
     height: 1em;
     align-items: center;
     justify-content: space-between;
-    background: #FF7400;
+    background: #FF7A2B;
     padding: 0.5em;
     border-radius: inherit;
 }
