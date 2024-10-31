@@ -7,8 +7,11 @@ function App() {
     const [user, setUser] = useState("guest");
     const [token, setToken] = useState(localStorage.getItem('accessToken') || "");
     const [goals, setGoals] = useState([]);
+    const [backgroundStatus, setBackgroundStatus] = useState(true);
     const url_ = 'http://localhost:8000/user/xfedorin/goals';
-
+    let toggleBackground = () => {
+        setBackgroundStatus(!backgroundStatus);
+    }
     useEffect(() => {
         console.log("Токен при загрузке:", token);
         if (token) {
@@ -56,6 +59,7 @@ function App() {
             const userEmail = userInfo.email; 
             setUser(userEmail);
             localStorage.setItem("email", userEmail);
+            toggleBackground();
         } catch (error) {
             console.error('Error fetching user info:', error);
             localStorage.removeItem("accessToken");

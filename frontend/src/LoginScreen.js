@@ -1,4 +1,5 @@
 import Menu from "./Menu.js";
+import "./LoginScreen.css";
 
 function LoginScreen({user}){
     let gAuth = process.env.REACT_APP_GOOGLE_AUTH_URL; 
@@ -10,13 +11,19 @@ function LoginScreen({user}){
                     "&response_type=token"+
                     "&scope=openid%20email%20profile";
     return (
-        <div id="App-body">
+        <div id="App-body" className={"backgroundEnabled"}>
             <header id="App-header">
                 <Menu user={user}/>
             </header>
             <div id="loginMessage">
-                <span>Log in to start changing your life</span>
-                <a id="authLink"></a>
+                <div id="loginMessageWrapper">
+                    <h1>
+                        <a id="authLink" href={fullQuery}>log in</a>
+                    </h1>
+                    <h1>
+                        to start changing your life
+                    </h1>
+                </div> 
             </div>
         </div>
     );

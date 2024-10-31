@@ -1,0 +1,28 @@
+#loginMessage #authLink{
+    text-decoration: underline;
+}
+#loginMessage{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-end;  
+    align-items: stretch;
+}
+#loginMessage a{
+    margin: 0;
+    padding: 0;
+    color: #FFFFFF;
+}
+h1{
+    padding: 0;
+    margin: 0;
+}
+#loginMessageWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;  
+    height: 50%;
+    align-self: flex-end;
+    margin-right: 10em;
+}

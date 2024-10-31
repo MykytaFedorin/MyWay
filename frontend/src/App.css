@@ -45,8 +45,18 @@
 #App-body{
     display: flex;
     width: 90%;
+    font-family: 'Nunito', sans-serif;
+    font-style: normal;
+    font-optical-sizing: auto;
     flex-direction: column;
     align-items: stretch;
+}
+.backgroundEnabled{
+    background-image: url('./assets/background.jpeg'); /* Укажите путь к изображению */
+    background-size: cover; /* Масштабируем изображение */
+    background-repeat: no-repeat; /* Без повторов */
+    background-position: center; /* Центрируем фон */
+    min-height: 100vh; /* Чтобы фон покрывал весь экран */
 }
 body, #root, #App-body{ 
     height: 100%;
