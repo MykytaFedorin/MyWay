@@ -9,11 +9,11 @@ function App() {
     const [goals, setGoals] = useState([]);
     const [backgroundStatus, setBackgroundStatus] = useState(true);
     const url_ = 'http://localhost:8000/user/xfedorin/goals';
+    const baseUrl = process.env.REACT_APP_BASE_BACKEND_URL;
     let toggleBackground = () => {
         setBackgroundStatus(!backgroundStatus);
     }
     useEffect(() => {
-        console.log("Токен при загрузке:", token);
         if (token) {
             fetchUserInfo(token); // Загружаем информацию о пользователе, если токен есть
         } else {
@@ -21,7 +21,6 @@ function App() {
         }
         getAllGoals();
     }, [token]); 
-
     async function identifyUser() {
         const hash = window.location.hash;
         const params = new URLSearchParams(hash.substring(1));
