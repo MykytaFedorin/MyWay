@@ -3,24 +3,27 @@ import './App.css';
 import Menu from './Menu.js';
 import MainArea from './MainArea.js';
 import LoginScreen from "./LoginScreen.js";
+
 function App() {
     const [user, setUser] = useState("guest");
     const [token, setToken] = useState(localStorage.getItem('accessToken') || "");
     const [goals, setGoals] = useState([]);
     const [backgroundStatus, setBackgroundStatus] = useState(true);
-    const url_ = 'http://localhost:8000/user/xfedorin/goals';
+
+    console.log("user="+user);
     const baseUrl = process.env.REACT_APP_BASE_BACKEND_URL;
     let toggleBackground = () => {
         setBackgroundStatus(!backgroundStatus);
     }
+
     useEffect(() => {
         if (token) {
-            fetchUserInfo(token); // Загружаем информацию о пользователе, если токен есть
+            fetchUserInfo(token);
         } else {
-            identifyUser(); // Попробуем идентифицировать пользователя через URL
+            identifyUser();
         }
-        getAllGoals();
-    }, [token]); 
+    }, [token]);
+
     async function identifyUser() {
         const hash = window.location.hash;
         const params = new URLSearchParams(hash.substring(1));
@@ -30,10 +33,7 @@ function App() {
             console.log("Access Token:", accessToken);
             setToken(accessToken);
             localStorage.setItem('accessToken', accessToken);
-            setUser("loggedin");
             window.location.hash = '';
-
-            // Получите информацию о пользователе сразу после получения токена
             await fetchUserInfo(accessToken);
         } else {
             console.log("Токен не найден в URL.");
@@ -58,20 +58,26 @@ function App() {
             const userEmail = userInfo.email; 
             setUser(userEmail);
             localStorage.setItem("email", userEmail);
+
             toggleBackground();
+            getAllGoals(userEmail);
         } catch (error) {
             console.error('Error fetching user info:', error);
             localStorage.removeItem("accessToken");
-
         }
     }
+
     async function logoutUser(){
         setUser("guest"); 
         localStorage.removeItem("accessToken");
     }
-    async function getAllGoals() {
+
+    async function getAllGoals(user) {
+        console.log("get user = " + user);
+        const url = baseUrl + "/user/"+user+"/goals";
+        console.log("url"+url);
         try {
-            const response = await fetch(url_, {
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -84,17 +90,17 @@ function App() {
             console.error('Error fetching goals:', error);
         }
     }
-    if(user !== "guest"){
+
+    if (user !== "guest") {
         return (
             <div id="App-body">
                 <header id="App-header">
                     <Menu user={user} logout={logoutUser}/>
                 </header>
-                <MainArea goals={goals} getAllGoals={getAllGoals}/>
+                <MainArea goals={goals} getAllGoals={() => getAllGoals(user)} user={user}/>
             </div>
         );
-    }
-    else{
+    } else {
         return(<LoginScreen user={user}/>);
     }
 }

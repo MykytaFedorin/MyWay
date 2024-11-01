@@ -37,10 +37,66 @@ def dictToTarget(dictObj: Dict) -> Goal:
     return goal
 
 
+def get_or_create_user(owner_login: str) -> None:
+    """
+    Проверяет наличие пользователя с указанным логином в БД и создает его, если не найден.
+    """
+    logger.debug(f"Entering get_or_create_user for login '{owner_login}'")
+    
+    check_query = 'MATCH (u:User {login: $login}) RETURN u'
+    create_query = '''
+        CREATE (u:User {
+            login: $login, 
+            first_name: $first_name, 
+            last_name: $last_name, 
+            password_: $password_
+        }) 
+        RETURN u
+    '''
+    
+    # Параметры для запроса
+    params = {
+        "login": owner_login,
+        "first_name": "",  
+        "last_name": "",   
+        "password_": ""    
+    }
+    
+    try:
+        with driver.session() as session:
+            # Проверка наличия пользователя
+            logger.debug("Executing check_query for existing user")
+            check_result = session.run(check_query, parameters={"login": owner_login})
+            existing_user = check_result.single()
+            
+            if existing_user:
+                logger.info(f"User '{owner_login}' already exists in the database.")
+                return  # Если пользователь уже существует, завершить
+            
+            # Если пользователь не найден, создаем его
+            logger.info(f"User '{owner_login}' not found. Creating new user...")
+            create_result = session.run(create_query, parameters=params)
+            
+            created_user = create_result.single()
+            if created_user:
+                logger.info(f"User '{owner_login}' created successfully with details: {created_user}")
+            else:
+                logger.warning(f"Failed to create user '{owner_login}'. No user returned after creation.")
+
+    except Exception as ex:
+        logger.error(f"Error occurred while checking or creating user '{owner_login}': {ex}")
+        raise my_ex.UserCreationError(f"Failed to check or create user '{owner_login}'") from ex
+    finally:
+        logger.debug("Exiting get_or_create_user")
+
+
 def get_all_goals(owner_login: str) -> List[Goal]:
     logger.debug(f"Executing query to fetch all goals for user {owner_login}")
     query = f'MATCH (u:User {{login: "{owner_login}"}})-[:HAS_GOAL]->(g:Goal) RETURN g'
-
+    try:
+        get_or_create_user(owner_login)
+    except my_ex.UserCreationError as ex:
+        raise ex
     try:        
         records, summary, keys = driver.execute_query(query, database_="myway") 
         logger.info(f"Query successful, fetched {len(records)} records")
@@ -91,7 +147,7 @@ def create_goal(owner_login: str, goal: Goal) -> Goal:
             goal_id=uuid.UUID(goal_id),  # Преобразуем обратно в UUID
             description=goal.description,
             deadline=goal.deadline,
-            owner_login=goal.owner_login
+            owner_login=owner_login
         )
     except Exception as ex:
         logger.error(f"Failed to create Goal for user {owner_login}: {ex}")

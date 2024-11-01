@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './GoalForm.css';
 
-function GoalForm({ getAllGoals, data, isNew}) {
+function GoalForm({ getAllGoals, data, isNew, user}) {
     const [currentDate, setCurrentDate] = useState(data.deadline);
     const [currentDescription, setCurrentDescription] = useState(data.description);
-
+    console.log("user="+user);
     const btnName = isNew ? "Create" : "Save";
 
     function changeDate(event) {
@@ -18,13 +18,14 @@ function GoalForm({ getAllGoals, data, isNew}) {
 
     function createGoal(event) {
         event.preventDefault(); // Предотвращаем перезагрузку страницы
-        const url = "http://localhost:8000/user/xfedorin/goals";
+        console.log("user path="+user);
+        const url = process.env.REACT_APP_BASE_BACKEND_URL+ user +"/goals";
         fetch(url, {
             method: 'POST',
             body: JSON.stringify({
                 description: currentDescription,
                 deadline: currentDate,
-                owner_login: "xfedorin"
+                owner_login: ""+ user +""
             }),
             headers: { 'Content-Type': 'application/json' },
         })
@@ -42,13 +43,13 @@ function GoalForm({ getAllGoals, data, isNew}) {
     function editGoal(event) {
         event.preventDefault(); // Предотвращаем перезагрузку страницы
         console.log(data.goal_id);
-        const url = "http://localhost:8000/user/xfedorin/goal" + "/" + data.goal_id;
+        const url = process.env.REACT_APP_BASE_BACKEND_URL+ user +"/goal" + "/" + data.goal_id;
         fetch(url, {
             method: 'PUT',
             body: JSON.stringify({
                 description: currentDescription,
                 deadline: currentDate,
-                owner_login: "xfedorin"
+                owner_login: ""+ user +""
             }),
             headers: { 'Content-Type': 'application/json' },
         })

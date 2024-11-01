@@ -8,3 +8,7 @@ class QueryError(Exception):
     pass
 class NoSuchGoalError(Exception):
     pass
+class UserNotFoundError(Exception):
+    pass
+class UserCreationError(Exception):
+    pass

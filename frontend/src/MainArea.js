@@ -4,12 +4,13 @@ import ListItem from './ListItem.js';
 import plus from './plus.png';
 import GoalForm from './GoalForm.js';
 
-function MainArea({ goals, getAllGoals}) {
+function MainArea({ goals, getAllGoals, user}) {
     const [currentInfo, setCurrentInfo] = useState(<div></div>);
     const [currentEditArea, setCurrentEditArea] = useState();
     const [formKey, setFormKey] = useState(0);
-    const getGoalUrl = 'http://localhost:8000/user/xfedorin/goal';
+    const getGoalUrl = process.env.REACT_APP_BASE_BACKEND_URL+ user +'/goal';
 
+    console.log("user main area="+user);
     function openDetails(goal_id) { 
         fetch(`${getGoalUrl}/${goal_id}`, {
             method: 'GET',
@@ -26,7 +27,8 @@ function MainArea({ goals, getAllGoals}) {
             <GoalForm key={formKey}
                       getAllGoals={getAllGoals}
                       data={data}
-                      isNew={false}/>);
+                      isNew={false}
+                      user={user}/>);
         })
         .catch((error) => console.error('Error fetching goals:', error));
     }
@@ -53,7 +55,8 @@ function MainArea({ goals, getAllGoals}) {
                                  getAllGoals={getAllGoals}
                                  data={{deadline: "",
                                         description: ""}}
-                                 isNew={true}/>); 
+                                 isNew={true}
+                                 user={user}/>); 
     }
     return (
         <div id="mainArea">

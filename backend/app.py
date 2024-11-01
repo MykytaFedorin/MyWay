@@ -37,6 +37,10 @@ async def get_all_goals(owner_login: str) -> List[Goal]:
     except my_ex.FetchError as ex:
         raise HTTPException(status_code=500,
                             detail=str(ex))
+    except my_ex.UserCreationError as ex:
+        raise HTTPException(status_code=500,
+                            detail=str(ex))
+
 
 
 @app.post("/user/{owner_login}/goals")
