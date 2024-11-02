@@ -8,7 +8,7 @@ function MainArea({ goals, getAllGoals, user}) {
     const [currentInfo, setCurrentInfo] = useState(<div></div>);
     const [currentEditArea, setCurrentEditArea] = useState();
     const [formKey, setFormKey] = useState(0);
-    const getGoalUrl = process.env.REACT_APP_BASE_BACKEND_URL+"/" + user +'/goal';
+    const getGoalUrl = process.env.REACT_APP_BASE_BACKEND_URL+"/user" + user +'/goal';
 
     console.log("user main area="+user);
     function openDetails(goal_id) { 
