@@ -1,26 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './GoalForm.css';
 
 function GoalForm({ getAllGoals, data, isNew, user}) {
     const [currentDate, setCurrentDate] = useState(data.deadline);
     const [currentDescription, setCurrentDescription] = useState(data.description);
-    console.log("user="+user);
+    const [saveTimeout, setSaveTimeout] = useState(null);
     const btnName = isNew ? "Create" : "Save";
 
     function changeDate(event) {
         setCurrentDate(event.target.value);
-        console.log(event.target.value);
     }
 
     function changeDescription(event) {
         setCurrentDescription(event.target.value);
     }
 
-    function createGoal(event) {
-        event.preventDefault(); // Предотвращаем перезагрузку страницы
-        console.log("user path="+user);
+    function createGoal() {
         const url = process.env.REACT_APP_BASE_BACKEND_URL +"/user/"+ user +"/goals";
-        fetch(url, {
+        return fetch(url, {
             method: 'POST',
             body: JSON.stringify({
                 description: currentDescription,
@@ -29,22 +26,19 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
             }),
             headers: { 'Content-Type': 'application/json' },
         })
-        .then(response => {
-                response.json();
-                getAllGoals(); // Вызываем функцию обновления целей
-                setCurrentDate("");
-                setCurrentDescription("");
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log(data);
+            console.log("Goal created:", data);
+            getAllGoals(); // Обновляем список целей
+            setCurrentDate("");
+            setCurrentDescription("");
         })
         .catch(error => console.error('Error creating goal:', error));
     }
-    function editGoal(event) {
-        event.preventDefault(); // Предотвращаем перезагрузку страницы
-        console.log(data.goal_id);
-        const url = process.env.REACT_APP_BASE_BACKEND_URL+ "/user/"+user +"/goal" + "/" + data.goal_id;
-        fetch(url, {
+
+    function editGoal() {
+        const url = process.env.REACT_APP_BASE_BACKEND_URL + "/user/" + user + "/goal/" + data.goal_id;
+        return fetch(url, {
             method: 'PUT',
             body: JSON.stringify({
                 description: currentDescription,
@@ -53,17 +47,42 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
             }),
             headers: { 'Content-Type': 'application/json' },
         })
-        .then(response => {
-                response.json();
-                getAllGoals(); // Вызываем функцию обновления целей
-                setCurrentDate("");
-                setCurrentDescription("");
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log(data);
+            console.log("Goal updated:", data);
+            getAllGoals(); // Обновляем список целей
         })
-        .catch(error => console.error('Error creating goal:', error));
+        .catch(error => console.error('Error updating goal:', error));
     }
+
+    // Функция автосохранения
+    function autoSaveGoal() {
+        if (isNew) {
+            createGoal();
+        } else {
+            editGoal();
+        }
+    }
+
+    // Хук useEffect для отслеживания изменений и автосохранения
+    useEffect(() => {
+        // Сбрасываем предыдущий таймер
+        if (saveTimeout) {
+            clearTimeout(saveTimeout);
+        }
+
+        // Устанавливаем новый таймер на 2 секунды
+        const newTimeout = setTimeout(() => {
+            autoSaveGoal();
+        }, 2000); // автосохранение через 2 секунды
+
+        // Сохраняем таймер в состоянии
+        setSaveTimeout(newTimeout);
+
+        // Очищаем таймер при размонтировании компонента
+        return () => clearTimeout(newTimeout);
+    }, [currentDate, currentDescription]); // следим за изменениями этих полей
+
     return (
         <form id="goalForm">
             <input
@@ -81,9 +100,12 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
             <div id="createBtnWrapper">
                 <button
                     id="createBtn"
-                    onClick={isNew ? createGoal : editGoal}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        isNew ? createGoal() : editGoal();
+                    }}
                 >
-                {btnName}
+                    {btnName}
                 </button>
             </div>
         </form>
