@@ -19,7 +19,7 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
     function createGoal(event) {
         event.preventDefault(); // Предотвращаем перезагрузку страницы
         console.log("user path="+user);
-        const url = process.env.REACT_APP_BASE_BACKEND_URL +"/"+ user +"/goals";
+        const url = process.env.REACT_APP_BASE_BACKEND_URL +"/user/"+ user +"/goals";
         fetch(url, {
             method: 'POST',
             body: JSON.stringify({
