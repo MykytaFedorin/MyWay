@@ -15,6 +15,11 @@ function Menu({ user, logout }){
 
 
 return (<nav>
+        <div id="burgerBtn">
+            <div className="burgerLine"></div>
+            <div className="burgerLine"></div>
+            <div className="burgerLine"></div>
+        </div>
       <ul id="menu">
         <li><a href="#philosofy">Philosofy</a></li>
         <li><a href="#goals">Goals</a></li>
@@ -28,6 +33,7 @@ return (<nav>
                 <li id="settingsBtn"></li>
             </ul>
         </div>
+
     </nav>);
 }
 
