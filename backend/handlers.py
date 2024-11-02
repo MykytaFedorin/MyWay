@@ -200,13 +200,13 @@ def edit_goal(user_id: str,
             MATCH(g:Goal{goal_id: $goal_id})
             SET g.goal_id = $goal_id,
                 g.deadline = $deadline,
-                g.owner_id = $owner_id,
+                g.owner_login = $owner_login,
                 g.description = $description
             RETURN g 
             """
     parameters = {"goal_id": goal_id,
                   "deadline": goal.deadline,
-                  "owner_id": user_id,
+                  "owner_login": user_id,
                   "description": goal.description}
     try:
         with driver.session() as session:
