@@ -30,7 +30,7 @@ logger.debug(".env has succesfully loaded")
 
 import handlers
 
-@app.get("/user/{owner_login}/goals")
+@app.get("/api/user/{owner_login}/goals")
 async def get_all_goals(owner_login: str) -> List[Goal]:
     try:
         return handlers.get_all_goals(owner_login)
@@ -43,7 +43,7 @@ async def get_all_goals(owner_login: str) -> List[Goal]:
 
 
 
-@app.post("/user/{owner_login}/goals")
+@app.post("/api/user/{owner_login}/goals")
 async def create_goal(owner_login: str, goal: Goal) -> Goal:
     try:
         return handlers.create_goal(owner_login, goal)
@@ -52,7 +52,7 @@ async def create_goal(owner_login: str, goal: Goal) -> Goal:
                             detail=str(ex))
 
 
-@app.get("/user/{user_login}/goal/{goal_id}")
+@app.get("/api/user/{user_login}/goal/{goal_id}")
 async def get_goal(user_login: str, goal_id: str) -> Goal:
     try:
         return handlers.get_goal_by_id(user_login, goal_id)
@@ -72,7 +72,7 @@ async def get_goal(user_login: str, goal_id: str) -> Goal:
                             f"""Goal with goal_id: '{goal_id}' not found for user '{user_login}'"""}))
 
 
-@app.put("/user/{user_login}/goal/{goal_id}")
+@app.put("/api/user/{user_login}/goal/{goal_id}")
 async def edit_goal(user_login: str,
                     goal_id: str,
                     goal: Goal) -> Goal:
@@ -83,7 +83,7 @@ async def edit_goal(user_login: str,
                             detail=str(ex))
 
 
-@app.delete("/user/{user_login}/goal/{goal_id}")
+@app.delete("/api/user/{user_login}/goal/{goal_id}")
 async def delete_goal(user_login: str, 
                       goal_id: str):
     try:
