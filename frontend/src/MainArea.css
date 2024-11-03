@@ -109,4 +109,8 @@
         z-index: 100;
         cursor: pointer;
     }
+    textarea, input {
+        font-family: "Nunito", sans-serif;
+        font-size: 24px;
+    }
 }
