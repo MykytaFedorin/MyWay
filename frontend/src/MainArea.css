@@ -55,7 +55,6 @@
     height: inherit;
 }
 #goalsListWrapper{
-    display: flex;
     width: 20%;
     flex-direction: column;
     gap: 1em;
@@ -80,23 +79,34 @@
     outline: none;
     background: inherit;
 }
-
 @media only screen and (max-width: 350px) {
     #burgerBtn{
         display: flex;
     }
-    #menu, #loginBtn, #userId, #loginBtn, #logoutBtn{
+    #App-header{
         display: none;
     }
     nav{
         justify-content: space-between;
     }
-    #editArea{
-        display: none;
+    #mainArea{
+        flex-direction: column;
+        margin-top: 2em;
+        gap: 2em;
     }
     #goalsListWrapper{
         width: 100%;
         margin: 0;
         padding: 0;
+    }
+    .hidden{
+        display: none;
+    }
+    .activeArea{
+        display: flex;
+    }
+    #burgerBtn{ 
+        z-index: 100;
+        cursor: pointer;
     }
 }

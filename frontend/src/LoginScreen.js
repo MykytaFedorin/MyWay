@@ -21,9 +21,9 @@ function LoginScreen({user}){
                         <h1>
                             <a id="authLink" href={fullQuery}>log in</a>
                         </h1>
-                        <h1>
+                        <h2>
                             to start changing your life
-                        </h1>
+                        </h2>
                     </div> 
                 </div>
             </div>

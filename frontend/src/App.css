@@ -62,7 +62,7 @@
     background-image: url('./assets/background.jpeg'); /* Укажите путь к изображению */
     background-size: cover; /* Масштабируем изображение */
     background-repeat: no-repeat; /* Без повторов */
-    background-position: center; /* Центрируем фон */
+    background-position: 50% 50%; /* Центрируем фон */
     min-height: 100vh; /* Чтобы фон покрывал весь экран */
 }
 body, #root, #App-body{ 

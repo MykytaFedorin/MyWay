@@ -9,6 +9,7 @@ function App() {
     const [token, setToken] = useState(localStorage.getItem('accessToken') || "");
     const [goals, setGoals] = useState([]);
     const [backgroundStatus, setBackgroundStatus] = useState(true);
+    const [activeArea, setActiveArea] = useState("list");
     console.log("user="+user);
     const baseUrl = process.env.REACT_APP_BASE_BACKEND_URL;
     let toggleBackground = () => {
