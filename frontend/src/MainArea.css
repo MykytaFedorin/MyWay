@@ -86,9 +86,6 @@
     #App-header{
         display: none;
     }
-    #App-body{
-        font-size: 24px;
-    }
     nav{
         justify-content: space-between;
     }

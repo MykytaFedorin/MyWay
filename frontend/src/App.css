@@ -47,6 +47,7 @@
     width: 90%;
     font-family: 'Nunito', sans-serif;
     font-style: normal;
+    font-size: 24px;
     font-optical-sizing: auto;
     flex-direction: column;
     align-items: stretch;
