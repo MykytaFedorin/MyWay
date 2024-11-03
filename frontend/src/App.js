@@ -10,7 +10,6 @@ function App() {
     const [goals, setGoals] = useState([]);
     const [backgroundStatus, setBackgroundStatus] = useState(true);
     const [activeArea, setActiveArea] = useState("list");
-    console.log("user="+user);
     const baseUrl = process.env.REACT_APP_BASE_BACKEND_URL;
     let toggleBackground = () => {
         setBackgroundStatus(!backgroundStatus);
@@ -30,13 +29,11 @@ function App() {
         const accessToken = params.get('access_token');
         
         if (accessToken) {
-            console.log("Access Token:", accessToken);
             setToken(accessToken);
             localStorage.setItem('accessToken', accessToken);
             window.location.hash = '';
             await fetchUserInfo(accessToken);
         } else {
-            console.log("Токен не найден в URL.");
         }
     }
 
@@ -73,9 +70,7 @@ function App() {
     }
 
     async function getAllGoals(user) {
-        console.log("get user = " + user);
         const url = baseUrl + "/user/"+user+"/goals";
-        console.log("url"+url);
         try {
             const response = await fetch(url, {
                 method: 'GET',

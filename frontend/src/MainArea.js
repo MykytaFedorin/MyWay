@@ -12,8 +12,6 @@ function MainArea({ goals, getAllGoals, user }) {
 
     const getGoalUrl = `${process.env.REACT_APP_BASE_BACKEND_URL}/user/${user}/goal`;
 
-    console.log("user main area =", user);
-    console.log("activeArea =", activeArea); // Лог состояния для отладки
 
     async function openDetails(goal_id) {
         try {
@@ -39,7 +37,6 @@ function MainArea({ goals, getAllGoals, user }) {
     }
     let toggleActiveArea = () => {
         setActiveArea(prevArea => (prevArea === "edit" ? "list" : "edit"));
-        console.log("hello");
     };
     async function deleteGoal(goal_id) {
         try {

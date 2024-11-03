@@ -28,7 +28,6 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("Goal created:", data);
             getAllGoals(); // Обновляем список целей
             setCurrentDate("");
             setCurrentDescription("");
@@ -49,7 +48,6 @@ function GoalForm({ getAllGoals, data, isNew, user}) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("Goal updated:", data);
             getAllGoals(); // Обновляем список целей
         })
         .catch(error => console.error('Error updating goal:', error));
